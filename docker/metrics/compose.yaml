@@ -1,0 +1,80 @@
+---
+services:
+  prometheus_server:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=180d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    volumes:
+      - type: volume
+        source: prometheus_data
+        target: /prometheus
+      - /opt/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    links:
+      - vmware_exporter
+    labels:      
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  grafana_server:
+    container_name: grafana
+    image: grafana/grafana:latest
+    volumes:
+    - type: volume
+      source: grafana_configuration
+      target: /etc/grafana
+    - type: volume
+      source: grafana_data
+      target: /var/lib/grafana
+    ports:
+    - 3000:3000
+    privileged: false
+    links:
+      - prometheus_server
+    labels:      
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  vmware_exporter:
+    container_name: vmware_exporter
+    image: pryorda/vmware_exporter:latest
+    command: -l WARNING
+    volumes:
+      - /etc/nsswitch.conf:/etc/nsswitch.conf
+    ports:
+      - 9272:9272
+    environment:
+      VSPHERE_HOST: esxi3.efhost.se
+      #VSPHERE_HOST: esxi3.mgmt.efhost.se
+      VSPHERE_IGNORE_SSL: "true"
+      VSPHERE_USER: monitor
+      VSPHERE_PASSWORD:
+      VSPHERE_COLLECT_SNAPSHOTS: "false"
+      LOGLEVEL: ERROR
+    extra_hosts:    
+      - "esxi3:172.16.247.13"
+      - "esxi3.efhost.se:172.16.247.13"
+      - "esxi3.mgmt.efhost.se:172.16.247.13"
+      - "old.esxi3.efhost.se:10.171.1.13"
+    labels:      
+      - "com.centurylinklabs.watchtower.enable=true"
+  
+  redfish_exporter:
+    container_name: redfish_exporter
+    image: erifri/redfish-exporter:latest
+    volumes:
+      - /etc/nsswitch.conf:/etc/nsswitch.conf
+      - /opt/prometheus/redfish_exporter.yml:/etc/prometheus/redfish_exporter.yml
+    ports:
+      - 9610:9610  
+    labels:      
+      - "com.centurylinklabs.watchtower.enable=true"
+  
+volumes:
+  prometheus_data:
+  grafana_configuration:
+  grafana_data:
