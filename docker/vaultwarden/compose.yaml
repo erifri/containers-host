@@ -1,0 +1,63 @@
+---
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    user: 102:102
+    ports:
+      - 3012:3012
+      - 8343:8080
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false
+      - DOMAIN=https://bw.efhost.se
+      - ROCKET_PORT=8080
+      - ROCKET_LOG=critical
+      - ROCKET_TLS={certs="/data/ssl/cert.pem", key="/data/ssl/key.pem"}
+      - INVITATIONS_ALLOWED=false
+      - LOG_FILE=/data/vaultwarden.log
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_FROM=erifri.smtp@gmail.com
+      - SMTP_PORT=587
+      - SMTP_SECURITY=starttls 
+      - SMTP_USERNAME=erifri.smtp@gmail.com
+      - SMTP_PASSWORD
+      - LOG_LEVEL=error
+    volumes:
+      - type: bind
+        source: /srv/vaultwarden
+        target: /data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+        
+  bw_backup:
+    image: bruceforce/vaultwarden-backup
+    container_name: vaultwarden-backup
+    restart: unless-stopped
+    init: true
+    depends_on:
+      - vaultwarden
+    volumes:
+      - /srv/vaultwarden:/data/
+      - /srv/vaultwarden/backup:/backups/
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - VW_DATABASE_URL=/data/db.sqlite3
+      - BACKUP_DIR=/backups
+      - BACKUP_ADD_DATABASE=true
+      - BACKUP_ADD_ATTACHMENTS=true
+      - BACKUP_ADD_CONFIG_JSON=true
+      - BACKUP_ADD_ICON_CACHE=true
+      - BACKUP_ADD_RSA_KEY=true
+      - BACKUP_DIR_PERMISSIONS=755
+      - CRON_TIME=0 5 * * *
+      - TIMESTAMP=false
+      - LOG_LEVEL=INFO      
+      - LOG_DIR=/backups/logs/
+      - LOG_DIR_PERMISSIONS=755
+      - UID=102
+      - GID=102
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
