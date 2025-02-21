@@ -1,6 +1,6 @@
 services:
   postgres-17:
-    container_name: postgres-17
+    container_name: ${COMPOSE_PROJECT_NAME}_postgres-17
     image: postgres:17-alpine
     restart: unless-stopped
     volumes:
@@ -14,14 +14,14 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
 
   guacd:
-    container_name: guacd
+    container_name: ${COMPOSE_PROJECT_NAME}_guacd
     image: guacamole/guacd:1.5.5
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
   guacamole:
-    container_name: guacamole
+    container_name: ${COMPOSE_PROJECT_NAME}_guacamole
     image: guacamole/guacamole:1.5.5
     restart: unless-stopped
     ports:
