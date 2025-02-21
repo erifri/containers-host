@@ -1,0 +1,8 @@
+---
+services:
+  vlmcsd:
+    image: ghcr.io/mogeko/vlmcsd:latest
+    container_name: vlmcsd
+    ports:
+      - 1688:1688
+    restart: unless-stopped
