@@ -1,0 +1,40 @@
+---
+networks:
+  net:
+    driver: bridge
+
+services:
+  authelia:
+    image: authelia/authelia:4.38.19
+    container_name: authelia
+    volumes:
+      - authelia:/config
+    networks:
+      - net
+    ports:
+      - 9091:9091
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      - TZ=Europe/Stockholm
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - ./redis:/data
+    networks:
+      - net
+    expose:
+      - 6379
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Stockholm
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+volumes:
+  authelia:
