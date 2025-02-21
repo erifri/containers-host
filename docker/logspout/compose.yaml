@@ -1,0 +1,15 @@
+---
+services:
+  logspout:
+    container_name: logspout
+    image: gliderlabs/logspout:latest
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - routes:/mnt/routes
+    command: syslog+udp://syslog.efhost.se:514
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+volumes:
+  routes:
