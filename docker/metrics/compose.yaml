@@ -59,7 +59,6 @@ services:
       - "esxi3:172.16.247.13"
       - "esxi3.efhost.se:172.16.247.13"
       - "esxi3.mgmt.efhost.se:172.16.247.13"
-      - "old.esxi3.efhost.se:10.171.1.13"
     labels:      
       - "com.centurylinklabs.watchtower.enable=true"
   
