@@ -1,0 +1,27 @@
+services:
+
+  #gitea_act_runner:
+  #  image: gitea/act_runner:latest-dind-rootless
+  #  restart: always
+  #  privileged: true
+  gitea_act_runner:
+    image: gitea/act_runner
+    restart: always
+    depends_on:
+      gitea:
+        # required so runner can attach to gitea, see "healthcheck"
+        condition: service_healthy 
+        restart: true
+    volumes:
+      - act_runner:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - GITEA_INSTANCE_URL
+      # When using Docker Secrets, it's also possible to use
+      # GITEA_RUNNER_REGISTRATION_TOKEN_FILE to pass the location.
+      # The env var takes precedence.
+      # Needed only for the first start.
+      - GITEA_RUNNER_REGISTRATION_TOKEN
+
+volumes:
+  act_runner:
