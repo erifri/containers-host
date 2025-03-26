@@ -64,7 +64,7 @@ services:
   
   redfish_exporter:
     container_name: redfish_exporter
-    image: erifri/redfish-exporter:latest
+    image: erifri/redfish-exporter:2025-02-19
     volumes:
       - /etc/nsswitch.conf:/etc/nsswitch.conf
       - /opt/prometheus/redfish_exporter.yml:/etc/prometheus/redfish_exporter.yml
