@@ -15,14 +15,14 @@ services:
 
   guacd:
     container_name: ${COMPOSE_PROJECT_NAME}_guacd
-    image: guacamole/guacd:1.5.5
+    image: guacamole/guacd:1.6.0
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
   guacamole:
     container_name: ${COMPOSE_PROJECT_NAME}_guacamole
-    image: guacamole/guacamole:1.5.5
+    image: guacamole/guacamole:1.6.0
     restart: unless-stopped
     ports:
       - 8084:8080/tcp # guacamole is on :8080/guacamole, not /.
