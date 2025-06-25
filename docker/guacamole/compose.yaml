@@ -28,10 +28,15 @@ services:
       - 8084:8080/tcp # guacamole is on :8080/guacamole, not /.
     environment:
       GUACD_HOSTNAME: guacd
-      POSTGRES_HOSTNAME: postgres-17
-      POSTGRES_DATABASE: ${POSTGRES_USER:-guacadb}
-      POSTGRES_USER: ${POSTGRES_USER:-guacadb}
-      POSTGRES_PASSWORD:
+      #POSTGRES_HOSTNAME: postgres-17
+      #POSTGRES_DATABASE: ${POSTGRES_USER:-guacadb}
+      #POSTGRES_USER: ${POSTGRES_USER:-guacadb}
+      #POSTGRES_PASSWORD:
+      POSTGRESQL_ENABLED: "true"
+      POSTGRESQL_HOSTNAME: postgres-17
+      POSTGRESQL_DATABASE: ${POSTGRESQL_USER:-guacadb}
+      POSTGRESQL_USER: ${POSTGRESQL_USER:-guacadb}
+      POSTGRESQL_PASSWORD:      
     depends_on:
       - postgres-17
       - guacd
