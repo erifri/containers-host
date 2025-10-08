@@ -5,7 +5,7 @@ networks:
 
 services:
   authelia:
-    image: authelia/authelia:4.39.11
+    image: authelia/authelia:4.39.12
     container_name: authelia
     volumes:
       - authelia:/config
