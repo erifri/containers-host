@@ -1,0 +1,33 @@
+services:
+
+  postgres-18:
+    container_name: ${COMPOSE_PROJECT_NAME}_postgres-18
+    image: postgres:18-alpine
+    restart: unless-stopped
+    volumes:
+      - pgdata18:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD:
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"   
+      
+  linkwarden:   
+    environment:
+      POSTGRES_HOSTNAME: postgres-18
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres-18:5432/postgres
+      NEXTAUTH_SECRET: 
+      NEXTAUTH_URL:
+    restart: always
+    image: ghcr.io/linkwarden/linkwarden:latest
+    ports:
+      - 4222:3000
+    volumes:
+      - data:/data/data
+    depends_on:
+      - postgres-18
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true" 
+      
+volumes:
+  pgdata18:
+  data:
