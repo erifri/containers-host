@@ -18,6 +18,7 @@ services:
     environment:
       POSTGRES_HOSTNAME: postgres-18
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres-18:5432/postgres
+      NEXT_PUBLIC_DISABLE_REGISTRATION: false
       NEXTAUTH_SECRET: 
       NEXTAUTH_URL:
     ports:
